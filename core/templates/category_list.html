@@ -1,0 +1,14 @@
+{% extends "base_generic.html" %}
+
+{% block navigation %}
+    {% for category in category %}
+        <a href="">{{ category.name }}</a> |
+    {% endfor %}  
+
+
+    {% for book in book %}
+   <ol>
+    <a href="{{ book.url }}">{{ book.title }}</a> by {{ book.author }}
+   </ol>
+    {% endfor %}      
+{% endblock %}
