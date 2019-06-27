@@ -4,9 +4,9 @@
     Books by category:
     {% for category in category %}
     {% if forloop.last %}
-    <a href="">{{ category.name }}</a> 
+    <a href="{% url 'python_books' category.pk %}">{{ category.name }}</a> 
     {% else %}
-    <a href="">{{ category.name }}</a> |
+    <a href="{% url 'python_books' category.pk %}">{{ category.name }}</a> |
     {% endif %} 
     {% endfor %}  
 
@@ -18,7 +18,7 @@
     <br />
     Times favorited: {{book.times_favorited}} |
     Added: {{ book.date }} |
-    Category: {% for category in book.category.all %} {{ category }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+    Category: {% for category in book.category.all %} <a href="{% url 'python_books' category.pk %}">" {{ category }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
     {% endfor %} 
     </p>     
 {% endblock %}
