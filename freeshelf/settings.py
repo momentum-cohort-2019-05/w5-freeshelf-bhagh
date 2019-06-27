@@ -27,7 +27,9 @@ MEDIA_URL = "/media/"
 SECRET_KEY = '1ofirohf+b1jim_do557cc4vpi1nd56o34k$feqcos-mj(mvao'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+in_production = bool(os.getenv('PRODUCTION'))
+DEBUG = not in_production
+
 
 ALLOWED_HOSTS = []
 
