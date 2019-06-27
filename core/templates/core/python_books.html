@@ -1,17 +1,7 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-    Books by category:
-    {% for category in category %}
-    {% if forloop.last %}
-    <a href="">{{ category.name }}</a> 
-    {% else %}
-    <a href="">{{ category.name }}</a> |
-    {% endif %} 
-    {% endfor %}  
-
-   
-    {% for book in book %}
+    {% for book in book_list %}
     <p>
     <a href="{{ book.url }}"><h4>{{ book.title }}</a> by {{ book.author }}</h4>
     {{ book.description }}

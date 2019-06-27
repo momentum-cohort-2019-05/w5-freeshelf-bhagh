@@ -20,6 +20,7 @@ class Book(models.Model):
     date = models.DateField(null=True, blank=True)
     description = models.TextField(max_length=500, help_text='Enter a brief description of the book')  
     url = models.URLField(max_length=300, blank=True)
+    times_favorited = models.CharField(max_length=10, default=0)
     #image_url = models.URLField(max_length=300)
 
     class Meta:

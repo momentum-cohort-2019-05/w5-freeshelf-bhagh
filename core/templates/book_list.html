@@ -1,0 +1,14 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    {% for book in book_list %}
+    <p>
+    <a href="{{ book.url }}">{{ book.title }}</a> by {{ book.author }}
+    <br />
+    {{ book.description }}
+    <br />
+    {{ book.date }}
+    {% for category in book.category.all %} {{ category }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>  
+    {% endfor %} 
+    </p>     
+{% endblock %}
