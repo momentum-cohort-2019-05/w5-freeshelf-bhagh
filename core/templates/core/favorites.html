@@ -1,0 +1,41 @@
+{% extends "base_generic.html" %}
+
+
+{% block content %}
+ 
+
+
+    Books by category:
+    {% for category in category %}
+    {% if forloop.last %}
+    <a href="{% url 'category' category.pk %}">{{ category.name }}</a> 
+    {% else %}
+    <a href="{% url 'category' category.pk %}">{{ category.name }}</a> |
+    {% endif %} 
+    {% endfor %}  
+
+    <h2>Your favorites</h2>
+    {% if request.user.is_authenticated %}
+ 
+    <p>
+        {% for book in request.user.favorite_books.all %}
+        <a href="{{ book.url }}"><h4>{{ book.title }}</a> by {{ book.author }}</h4>
+        {{ book.description }}
+        <form method='POST' action="{% url 'favorite_added' book.pk %}">
+            {% csrf_token %}
+            <input type='hidden' name='video' value={{ book.pk }}>
+            <button type='submit'>
+                {% if book in request.user.favorite_books.all %}
+                    Unfavorite
+                {% else %}
+                    Favorite
+                {% endif %}
+            </button>
+        <br />
+       {% endfor %} 
+    {% else %}
+        <p>You need to be logged in to view your favoites.</p>
+    {% endif %}
+ 
+    </p>     
+{% endblock %}

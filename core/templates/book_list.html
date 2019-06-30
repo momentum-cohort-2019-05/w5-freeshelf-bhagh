@@ -8,7 +8,7 @@
     {{ book.description }}
     <br />
     {{ book.date }}
-    {% for category in book.category.all %} {{ category }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>  
+    {% for category in bookegory }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>  
     {% endfor %} 
     </p>     
 {% endblock %}

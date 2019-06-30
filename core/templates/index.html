@@ -1,12 +1,24 @@
 {% extends "base_generic.html" %}
 
+
 {% block content %}
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+
+
+
     Books by category:
     {% for category in category %}
     {% if forloop.last %}
-    <a href="{% url 'python_books' category.pk %}">{{ category.name }}</a> 
+    <a href="{% url 'category' category.pk %}">{{ category.name }}</a> 
     {% else %}
-    <a href="{% url 'python_books' category.pk %}">{{ category.name }}</a> |
+    <a href="{% url 'category' category.pk %}">{{ category.name }}</a> |
     {% endif %} 
     {% endfor %}  
 
@@ -18,7 +30,23 @@
     <br />
     Times favorited: {{book.times_favorited}} |
     Added: {{ book.date }} |
-    Category: {% for category in book.category.all %} <a href="{% url 'python_books' category.pk %}">" {{ category }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+    Category: {% for category in book.category.all %} <a href="{% url 'category' category.pk %}"> {{ category }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
+    | 
+
+    {% if request.user.is_authenticated %}
+    <form method='POST' action="{% url 'favorite_added' book.pk %}">
+        {% csrf_token %}
+        <input type='hidden' name='video' value={{ book.pk }}>
+        <button type='submit'>
+            {% if book in request.user.favorite_books.all %}
+                Unfavorite
+            {% else %}
+                Favorite
+            {% endif %}
+        </button>
+    </form>
+    {% endif %}
+
     {% endfor %} 
     </p>     
 {% endblock %}

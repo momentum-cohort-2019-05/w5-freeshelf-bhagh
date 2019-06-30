@@ -1,16 +1,19 @@
 from django.shortcuts import render
 from django.views import generic
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import CreateView
 from django.urls import reverse
 from django.views.generic import TemplateView
+from django.contrib import messages
+from datetime import datetime
 
-from core.models import Book, Author, Category
 
-class BookListView(generic.ListView):
-    model = Book
-    template_name = "book_list.html"
+from core.models import Book, Author, Category, Favorite
+
+
+
+
 
 
 class MultipleModelView(TemplateView):
@@ -22,15 +25,20 @@ class MultipleModelView(TemplateView):
          context['category'] = Category.objects.all()
          return context
 
-def sort_by (request):
-    book = Book.objects.filter(category__name="Python")
-    return render(request, 'core/python_books.html', {
-        "book": book,
-    })
+
+class FavoriteView(TemplateView):
+    template_name = 'core/favorites.html'
+
+    def get_context_data(self, **kwargs):
+         context = super(FavoriteView, self).get_context_data(**kwargs)
+         context['book'] = Book.objects.all()
+         context['category'] = Category.objects.all()
+         return context
+  
 
 class CategoryView(generic.ListView):
     model = Book
-    template_name ='core/python_books.html'
+    template_name ='core/category.html'
     
     def get_queryset(self):
         id = self.kwargs['pk']
@@ -41,3 +49,23 @@ class CategoryView(generic.ListView):
         context = super(CategoryView, self).get_context_data(**kwargs)
         context['name'] = get_object_or_404(Category, pk = self.kwargs['pk'])
         return context
+
+def add_to_favorite(request, book_pk):
+    book = get_object_or_404(Book, pk=book_pk)
+    user = request.user
+   
+    favorite, created = user.favorite_set.get_or_create(book=book)
+    user.favorited_at = datetime.now()
+
+
+    if created: 
+        messages.success(request, f"You've added {book.title} to your favorites.")
+        book.times_favorited += 1
+        book.save(update_fields=['times_favorited'])
+    else: 
+        messages.info(request, f"You've removed {book.title} from your favorites.")
+        book.times_favorited -= 1
+        book.save(update_fields=['times_favorited'])
+        favorite.delete()
+
+    return redirect('/core')

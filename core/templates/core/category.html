@@ -9,6 +9,21 @@
     Times favorited: {{book.times_favorited}} |
     Added: {{ book.date }} |
     Category: {% for category in book.category.all %} {{ category }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+
+    {% if request.user.is_authenticated %}
+    <form method='POST' action="{% url 'favorite_added' book.pk %}">
+        {% csrf_token %}
+        <input type='hidden' name='video' value={{ book.pk }}>
+        <button type='submit'>
+            {% if book in request.user.favorite_books.all %}
+                Unfavorite
+            {% else %}
+                Favorite
+            {% endif %}
+        </button>
+    </form>
+    {% endif %}
+
     {% endfor %} 
     </p>     
 {% endblock %}
