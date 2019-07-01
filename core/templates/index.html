@@ -12,8 +12,7 @@
 
 
 
-
-    Books by category:
+    <a href="{% url 'index' %}">View all books</a> or sort by category:
     {% for category in category %}
     {% if forloop.last %}
     <a href="{% url 'category' category.pk %}">{{ category.name }}</a> 
@@ -21,32 +20,33 @@
     <a href="{% url 'category' category.pk %}">{{ category.name }}</a> |
     {% endif %} 
     {% endfor %}  
-
-   
-    {% for book in book %}
+    
     <p>
-    <a href="{{ book.url }}"><h4>{{ book.title }}</a> by {{ book.author }}</h4>
-    {{ book.description }}
-    <br />
-    Times favorited: {{book.times_favorited}} |
-    Added: {{ book.date }} |
-    Category: {% for category in book.category.all %} <a href="{% url 'category' category.pk %}"> {{ category }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
-    | 
+        {% for book in book %}
+        <p>
+            <!-- <img src="{{ book.image_url}}" class="left"> -->
+            <a href="{{ book.url }}"><h4>{{ book.title }}</a> by {{ book.author }}</h4>
+            {{ book.description }}
+            <br />
+            Times favorited: {{book.times_favorited}} |
+            Added: {{ book.date }} |
+            Category: {% for category in book.category.all %} <a href="{% url 'category' category.pk %}"> {{ category }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
+             
 
-    {% if request.user.is_authenticated %}
-    <form method='POST' action="{% url 'favorite_added' book.pk %}">
-        {% csrf_token %}
-        <input type='hidden' name='video' value={{ book.pk }}>
-        <button type='submit'>
-            {% if book in request.user.favorite_books.all %}
-                Unfavorite
-            {% else %}
-                Favorite
+            {% if request.user.is_authenticated %}
+            <form method='POST' action="{% url 'favorite_added' book.pk %}">
+                {% csrf_token %}
+                <input type='hidden' name='' value={{ book.pk }}>
+                <button type='submit'>
+                    {% if book in request.user.favorite_books.all %}
+                        Unfavorite
+                    {% else %}
+                        Favorite
+                    {% endif %}
+                </button>
+            </form>
             {% endif %}
-        </button>
-    </form>
-    {% endif %}
-
-    {% endfor %} 
+        </p>
+        {% endfor %} 
     </p>     
 {% endblock %}

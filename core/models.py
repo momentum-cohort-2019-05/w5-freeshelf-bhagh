@@ -9,7 +9,7 @@ from datetime import datetime
 
 class Category(models.Model):
     name = models.CharField(max_length=50)
-    #slug = models.SlugField(unique=True, null=True, blank=True)
+    slug = models.SlugField(max_length=255)  
 
     class Meta:
         ordering = ["name"]
@@ -28,13 +28,11 @@ class Book(models.Model):
     url = models.URLField(max_length=300, blank=True)
     times_favorited = models.PositiveIntegerField(default=0)
     favorited_by = models.ManyToManyField(to=User, related_name='favorite_books', through='Favorite')
-
-    #image_url = models.URLField(max_length=300)
+    image_url = models.URLField(max_length=300, default="")
 
     class Meta:
         ordering = ["-date"]
  
-    
     def __str__(self):
         return self.title
     
@@ -43,7 +41,6 @@ class Book(models.Model):
 
 class Author(models.Model):
     name = models.CharField(max_length=100)
-    #user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return self.name
@@ -52,6 +49,11 @@ class Favorite (models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     book = models.ForeignKey(to=Book,on_delete=models.CASCADE)
     favorite_at = models.DateTimeField(default=datetime.now, blank=True)
+    
+    class Meta:
+        unique_together = [ 'user', 'book' ]
+        ordering = [ '-favorite_at']
+
 
 
 

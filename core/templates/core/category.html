@@ -1,6 +1,15 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
+<a href="{% url 'index' %}">View all books</a> or sort by category:
+{% for category in category %}
+{% if forloop.last %}
+<a href="{% url 'category' category.pk %}">{{ category.name }}</a> 
+{% else %}
+<a href="{% url 'category' category.pk %}">{{ category.name }}</a> |
+{% endif %} 
+{% endfor %}  
+
     {% for book in book_list %}
     <p>
     <a href="{{ book.url }}"><h4>{{ book.title }}</a> by {{ book.author }}</h4>
